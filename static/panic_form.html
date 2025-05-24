@@ -13,7 +13,7 @@
   <script>
     document.getElementById("alertForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      
+
       // Get user's geolocation
       navigator.geolocation.getCurrentPosition(function(position) {
         const lat = position.coords.latitude;
@@ -21,7 +21,7 @@
         const incident = document.getElementById("incident").value;
 
         // Send data to backend
-        fetch('http://127.0.0.1:5000/submit', {
+        fetch('/submit', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -36,6 +36,8 @@
         .then(data => {
           console.log("✅ Submission response:", data);
           alert("✅ Panic alert sent successfully!");
+          // Redirect to map
+          window.location.href = "/map";
         })
         .catch(err => {
           console.error("❌ Error submitting:", err);
