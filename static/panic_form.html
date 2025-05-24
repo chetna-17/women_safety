@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Panic Alert Form</title>
+</head>
+<body>
+  <h2>Submit Panic Alert</h2>
+  <form id="alertForm">
+    <input type="text" id="incident" placeholder="Incident Type" required><br><br>
+    <input type="submit" value="Send Alert">
+  </form>
+
+  <script>
+    document.getElementById("alertForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      // Get user's geolocation
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const incident = document.getElementById("incident").value;
+
+        // Send data to backend
+        fetch('http://127.0.0.1:5000/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            lat: lat,
+            lon: lon,
+            incident_type: incident
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log("✅ Submission response:", data);
+          alert("✅ Panic alert sent successfully!");
+        })
+        .catch(err => {
+          console.error("❌ Error submitting:", err);
+          alert("❌ Failed to submit panic alert.");
+        });
+      }, function(error) {
+        console.error("❌ Geolocation error:", error);
+        alert("❌ Could not get your location.");
+      });
+    });
+  </script>
+</body>
+</html>
